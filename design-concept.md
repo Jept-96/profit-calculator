@@ -17,6 +17,9 @@ Most calculators look like blog posts with a form dropped in. ProfitLab is struc
 **Earn the sign-up.**
 The email capture appears only after the user has received value (the result). It slides in from the bottom — visible but not intrusive, and always dismissable.
 
+**Dark throughout.**
+Both sections share the same dark palette. Depth comes from elevation — slightly lighter darks on darker darks — not from a jarring colour switch between sections. This is the standard used by Linear, Vercel, Resend and other premium SaaS tools.
+
 ---
 
 ## Layout & Structure
@@ -26,47 +29,60 @@ The email capture appears only after the user has received value (the result). I
 The page is split into two deliberate, full-screen sections using CSS scroll-snap:
 
 ```
-Section 1 (100vh) — Hero / Marketing
-Section 2 (100vh) — App / Calculator
+Section 1 (100svh) — Hero / Marketing
+Section 2 (100svh) — App / Calculator
 ```
 
-Scroll-snap makes the transition feel intentional — like flipping between two screens in a native app rather than scrolling a webpage.
+`100svh` (small viewport height) is used instead of `100vh` to fix the iOS Safari address-bar bug where `100vh` includes the browser chrome, hiding content behind it.
+
+Scroll-snap makes the transition feel intentional — like flipping between two screens in a native app rather than scrolling a webpage. Disabled below 860px on mobile, where natural scroll is more comfortable.
 
 ### Section 1 — Hero
 
 - **Purpose:** Communicate the product's value in under 5 seconds. Generate enough trust to scroll.
 - **Layout:** Two-column grid. Left = copy. Right = product preview card.
-- **Background:** Near-black (`#09090b`). The dark background isolates the preview card, making it the focal point of the page.
-- **Preview card:** A static, styled recreation of the actual tool output. Not a mockup screenshot — real HTML and CSS — so it looks exactly like what the user will receive. Labelled "SAMPLE" to set honest expectations.
-- **Floating chips:** Two small cards that float above/below the preview card, calling out specific data points (profit match, margin). They reinforce the output without cluttering the headline area.
-- **Nav:** Starts transparent over the dark hero. On scroll to Section 2, it morphs to a frosted-glass white bar. This signals to the user that they've moved from "marketing" to "tool" without any hard cut.
+- **Background:** Dark base (`#0c0c10`) with a single top-centre radial ambient glow — brand purple at ~18% opacity, fading to transparent. One light source. No orbs, no grid, no texture. This is the Linear/Vercel standard: sophisticated colour layering over ornamental decoration.
+- **Preview card:** A white card on the dark background — the intentional contrast focal point. Built with real HTML/CSS so it always matches the live output. Labelled "SAMPLE" to set honest expectations. Floating chips above and below reinforce specific data points (profit match, margin) without cluttering the copy.
+- **Nav:** Always dark frosted glass (`rgba(12,12,16,.75)` + `blur(20px)`). Consistent across both sections — no morph needed since the palette is unified.
 
 ### Section 2 — App
 
 - **Purpose:** Do the job. Fast, clear, no distractions.
 - **Layout:** Three layers:
-  1. **Top bar** — thin toolbar with section label, status text, and a "Back to home" button. Signals a context switch into the app.
-  2. **Form panel (left, fixed 360px)** — always visible. Compact inputs, quick-pick niche chips for speed, a single action button.
-  3. **Results panel (right, fluid)** — starts with a skeleton/waiting state so the panel never looks empty. Fills in on submit with a fade-up animation.
-- **Background:** Light grey (`#f4f4f6`) for the outer section, white for both panels. Creates a clear container feel without heavy shadows.
+  1. **Top bar** — thin toolbar with section label and a "Back to home" button. Signals context switch into the tool.
+  2. **Form panel (left, fixed 360px)** — always visible. Compact inputs, quick-pick niche chips for speed, single action button.
+  3. **Results panel (right, fluid)** — starts with a shimmer-animated skeleton so the panel never looks empty. Fills in on submit with a fade-up animation.
+- **Background:** `#0f0f14` — barely lighter than the hero base, creating separation without a colour jump. Panels are elevated slightly further (`#141420`), inputs and cards one step more (`#1a1a28`).
 
 ---
 
 ## Colour System
 
-| Token          | Value     | Usage                                      |
-|----------------|-----------|--------------------------------------------|
-| `--brand`      | `#6c47ff` | Primary actions, accents, links, badges    |
-| `--brand-dark` | `#5535d4` | Hover states on brand elements             |
-| `--brand-lite` | `#ede9ff` | Backgrounds for brand-tinted elements      |
-| `--green`      | `#16a34a` | Profit numbers, success states, "recommended" badge |
-| `--green-lite` | `#dcfce7` | Badge backgrounds                          |
-| `--ink`        | `#09090b` | Hero background, primary text, nav (dark)  |
-| `--bg`         | `#f4f4f6` | App section background                     |
-| `--border`     | `#e4e4e7` | All dividers and card borders              |
-| `--muted`      | `#71717a` | Secondary text, labels, placeholders       |
+The palette uses a 4-step dark elevation system. Depth is communicated by surface lightness, not by colour change.
 
-**Intentional restraint:** Only two hues — purple (brand) and green (profit/success). Every other colour is a neutral. This keeps the UI calm and makes the brand and profit numbers stand out without competition.
+| Token           | Value                      | Usage                                         |
+|-----------------|----------------------------|-----------------------------------------------|
+| `--base`        | `#0c0c10`                  | Page base / hero background                   |
+| `--app-bg`      | `#0f0f14`                  | App section background                        |
+| `--surface-1`   | `#141420`                  | Panels, top bar                               |
+| `--surface-2`   | `#1a1a28`                  | Inputs, stat cards, plan items                |
+| `--surface-3`   | `#222232`                  | Hover states, elevated cells                  |
+| `--brand`       | `#7c5cff`                  | Primary actions, accents, target box          |
+| `--brand-dark`  | `#6440f0`                  | Button hover states                           |
+| `--brand-glow`  | `rgba(124,92,255,.18)`     | Ambient glow, focus rings, chip backgrounds   |
+| `--green`       | `#4ade80`                  | Profit numbers, success badges (dark-optimised) |
+| `--green-dim`   | `rgba(74,222,128,.15)`     | Badge backgrounds                             |
+| `--border`      | `rgba(255,255,255,.08)`    | Default dividers and card borders             |
+| `--border-med`  | `rgba(255,255,255,.13)`    | Hover / focused borders                       |
+| `--text`        | `#f0f0f5`                  | Primary text                                  |
+| `--text-2`      | `rgba(240,240,245,.6)`     | Secondary text, body copy                     |
+| `--text-muted`  | `rgba(240,240,245,.32)`    | Labels, placeholders, captions                |
+
+**Preview card exception:** The hero preview card is always white (`#ffffff`). Its internal colours are hardcoded light-mode values (`#09090b` text, `#71717a` muted, `#f4f4f6` stat backgrounds) since CSS custom properties from the dark palette would make text invisible on a white surface.
+
+**Green is brighter on dark:** `#4ade80` (vs the lighter-bg standard `#16a34a`) — the higher luminosity is needed for sufficient contrast against dark surfaces.
+
+**Intentional restraint:** Only two hues — purple (brand/action) and green (profit/success). Everything else is a cool-neutral dark. This keeps the UI calm and makes numbers stand out without visual competition.
 
 ---
 
@@ -75,7 +91,7 @@ Scroll-snap makes the transition feel intentional — like flipping between two 
 **Font:** [DM Sans](https://fonts.google.com/specimen/DM+Sans) — a geometric sans-serif with optical sizing support (9–40px). Chosen for:
 - Clean, minimal personality — no quirks, no decorative details
 - Excellent legibility at small sizes (form labels, stat captions)
-- Strong weight contrast between 400 and 800, used to create hierarchy without needing multiple typefaces
+- Strong weight contrast between 400 and 800, used to create hierarchy without multiple typefaces
 - Widely used in modern SaaS and fintech — feels at home in a tool context
 
 **Scale:**
@@ -84,32 +100,32 @@ Scroll-snap makes the transition feel intentional — like flipping between two 
 - Body / plan text: `0.85–0.9rem` / weight 400–500
 - Labels / captions: `0.65–0.75rem` / weight 600 / uppercase + letter-spacing
 
-No serif. No italic. Type hierarchy is built entirely through size, weight, and colour.
+No serif. No italic. Hierarchy is built entirely through size, weight, and colour.
 
 ---
 
 ## Component Decisions
 
 ### Preview Card (Hero)
-Built with the same CSS classes as the real results card, not a static image. This means it always matches the live output and costs zero extra maintenance.
+A white card on the dark hero background — the deliberate contrast focal point. Intentionally uses hardcoded light-mode colours internally so the white surface reads correctly. Floating chips (`+$17.19 / unit`, `Profit Match`) add data-point callouts without cluttering the copy.
+
+### Hero CTA Button
+The `⚡ Find Winning Product` button uses a slow left-to-right gradient shimmer animation (`background-position` over 3s). On hover, the glow ring expands. Designed to feel active and energetic — the button is the single most important tap target on the page.
 
 ### Niche Chips
-Quick-pick buttons beneath the niche dropdown. Tapping a chip selects the dropdown option and vice versa — they stay in sync. Reduces the click count for the most common niches from 2 to 1.
+Quick-pick buttons beneath the niche dropdown. Tapping a chip selects the dropdown value and vice versa — they stay in sync. Reduces the click count for common niches from 2 interactions to 1.
 
 ### Skeleton / Waiting State
-The results panel never starts empty. A shimmer-animated skeleton preview gives the right column weight and signals to the user where results will appear. This prevents the jarring "half a page is blank" feel common in split-panel tools.
+The results panel never starts empty. A shimmer-animated skeleton preview gives the right column visual weight and signals where results will appear. Hidden on small mobile screens where vertical space is limited.
 
 ### Target Box (Results)
-The units-needed calculation is the core value of the tool. It gets the most visual weight — a full-width purple card with large type, breaking out of the card grid to draw the eye first.
+The units-needed calculation is the core value of the tool. It gets the most visual weight — a full-width gradient purple card with large type, breaking out of the stat grid to draw the eye first.
 
 ### Sign-Up Bar
 - **Fixed position, bottom of viewport** — doesn't interrupt the flow
-- **Triggered by results, not by time** — only appears after value is delivered
-- **Dismissable** — a single × removes it without guilt
-- **Dark themed** — echoes the hero background, visually distinct from the light app section so it reads as a separate system message
-
-### Nav Morphing
-The navigation uses an `IntersectionObserver` on the hero section. When the hero exits the viewport, the nav switches from `class="nav dark"` (transparent, white text) to `class="nav light"` (frosted white, dark text). No scroll event listeners, no jank — just a clean CSS class swap driven by the browser's native intersection API.
+- **Triggered by results, not by time** — only appears 1.2s after value is delivered
+- **Dismissable** — a single × removes it
+- **Consistent with the dark theme** — uses `--surface-1` background, seamlessly part of the page rather than a jarring overlay
 
 ---
 
@@ -117,11 +133,11 @@ The navigation uses an `IntersectionObserver` on the hero section. When the hero
 
 ```
 Land on page
-  → Hero: understand the product (5 sec)
-  → Click "Find my product" / scroll
-  → App section: fill 3 fields (15 sec)
+  → Hero: understand the product (~5 sec)
+  → Click "⚡ Find Winning Product" / scroll down
+  → App section: fill 3 fields (~15 sec)
   → Click "Find Winning Product"
-  → Results appear in-place, right panel, fade-up (instant)
+  → Results appear in-place, right panel, fade-up animation (instant)
   → 1.2s later: sign-up bar slides up from bottom
   → User saves plan or dismisses
 ```
@@ -134,17 +150,23 @@ No modals. No page reloads. No scroll jumps. Every state change is in-place.
 
 | Breakpoint | Behaviour |
 |---|---|
-| > 900px | Full two-column hero + two-panel app. Scroll-snap active. |
-| 600–900px | Hero stacks vertically. App panels stack (form above results). Scroll-snap disabled. |
-| < 600px | Nav collapses to logo + CTA only. Form padding tightened. Stat grid goes 2-column. Floating chips hidden. |
+| > 860px | Full two-column hero + two-panel app. CSS scroll-snap active. |
+| 540–860px | Hero stacks vertically (preview card visible). App panels stack (form above results). Scroll-snap disabled. |
+| < 540px | Hero preview card hidden — headline and CTA take full focus. Niche chips and buttons get 44px+ touch targets. Stat grid 2-column, profit spans full row. Skeleton hidden to save space. |
 
-Scroll-snap is **disabled on mobile** — stacked panels that snap feel trapped on small screens. Natural scroll is more comfortable.
+**`100svh` instead of `100vh`** — used on both sections to fix the iOS Safari address-bar bug.
+
+**Scroll-snap disabled on mobile** — full-height snapping feels claustrophobic on small screens. Natural scroll is used below 860px.
+
+**Preview card hidden on small phones** — on screens under 540px the card pushes the headline and CTA below the fold. Removing it keeps the most important content (the hook and the button) front and centre.
 
 ---
 
 ## What Was Intentionally Left Out
 
-- **Animations beyond fade/slide** — no parallax, no page transitions, no loading spinners. Speed > spectacle.
-- **Dark mode toggle** — the two-section dark/light contrast is a deliberate design choice, not a default. Adding a toggle would undermine it.
+- **Dark/light mode toggle** — the unified dark palette is a deliberate choice, not a default. A toggle would add complexity without adding value for an MVP.
 - **Multiple fonts** — one font, multiple weights. Clean.
-- **Decorative backgrounds** — no gradient orbs, no grid overlays, no mesh gradients. The data and typography carry the visual weight.
+- **Gradient orbs / mesh backgrounds** — the single top-centre ambient glow is the only decorative background element. Everything else is flat dark.
+- **Loading states / spinners** — the calculation is synchronous and instant. A spinner would add perceived latency where there is none.
+- **Animations beyond fade, shimmer, and float** — no parallax, no page transitions, no entrance sequences. Speed and clarity over spectacle.
+- **Multiple products per niche in the UI** — the data supports it but the selection logic is intentionally deferred. The MVP validates whether users want the tool at all before adding comparison features.
