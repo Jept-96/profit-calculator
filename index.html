@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProfitLab — Find Your Winning Product</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet" />
+  <style>
+  /* ═══════════════════════════════════════════════════════
+     RESET & TOKENS
+  ═══════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand:       #6c47ff;
+    --brand-dark:  #5535d4;
+    --brand-lite:  #ede9ff;
+    --green:       #16a34a;
+    --green-lite:  #dcfce7;
+    --ink:         #09090b;
+    --ink-2:       #3f3f46;
+    --muted:       #71717a;
+    --border:      #e4e4e7;
+    --surface:     #ffffff;
+    --bg:          #f4f4f6;
+    --hero-bg:     #09090b;
+    --r-sm:        8px;
+    --r:           14px;
+    --r-lg:        20px;
+  }
+
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--ink);
+    color: var(--ink);
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     NAV — fixed, morphs on scroll
+  ═══════════════════════════════════════════════════════ */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    transition: background .3s, border-color .3s, box-shadow .3s;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.light {
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-color: var(--border);
+    box-shadow: 0 1px 12px rgba(0,0,0,.06);
+  }
+  .nav.dark {
+    background: transparent;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 9px;
+    text-decoration: none;
+  }
+  .nav-mark {
+    width: 30px; height: 30px;
+    background: var(--brand);
+    border-radius: 8px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .nav-name {
+    font-size: 0.97rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    transition: color .3s;
+  }
+  .nav.dark  .nav-name { color: #fff; }
+  .nav.light .nav-name { color: var(--ink); }
+
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+
+  .nav-link {
+    font-size: 0.82rem; font-weight: 500;
+    text-decoration: none;
+    transition: color .3s;
+  }
+  .nav.dark  .nav-link { color: rgba(255,255,255,.55); }
+  .nav.light .nav-link { color: var(--muted); }
+  .nav-link:hover { color: var(--brand) !important; }
+
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: inherit; font-size: 0.82rem; font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 999px; border: none; cursor: pointer;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .nav.dark .nav-btn {
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.15);
+  }
+  .nav.dark .nav-btn:hover { background: rgba(255,255,255,.18); }
+  .nav.light .nav-btn { background: var(--brand); color: #fff; }
+  .nav.light .nav-btn:hover { background: var(--brand-dark); }
+
+  @media (max-width: 600px) {
+    .nav { padding: 0 20px; }
+    .nav-link { display: none; }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     SECTION 1 — HERO
+  ═══════════════════════════════════════════════════════ */
+  .hero {
+    height: 100vh;
+    scroll-snap-align: start;
+    background: var(--hero-bg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle noise texture */
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; opacity: .4;
+  }
+
+  /* single thin accent line top */
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(108,71,255,.6), transparent);
+  }
+
+  /* ── Hero Left ── */
+  .hero-left {
+    padding: 0 48px 0 max(40px, calc((100vw - 1200px)/2 + 40px));
+    position: relative; z-index: 2;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+    margin-bottom: 28px;
+  }
+  .hero-tag-dot {
+    width: 5px; height: 5px;
+    background: var(--brand);
+    border-radius: 50%;
+  }
+
+  .hero-h1 {
+    font-size: clamp(2.6rem, 4vw, 4rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -2px;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .hero-h1 .accent { color: var(--brand); }
+
+  .hero-sub {
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(255,255,255,.45);
+    line-height: 1.7;
+    max-width: 380px;
+    margin-bottom: 36px;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 52px;
+  }
+  .btn-hero {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--brand);
+    color: #fff;
+    font-family: inherit; font-size: 0.92rem; font-weight: 700;
+    padding: 13px 26px;
+    border-radius: 999px; border: none; cursor: pointer; text-decoration: none;
+    transition: background .15s, transform .15s;
+    white-space: nowrap;
+  }
+  .btn-hero:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  .btn-hero-ghost {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,.4);
+    font-size: 0.85rem; font-weight: 500;
+    text-decoration: none; cursor: pointer; background: none; border: none;
+    font-family: inherit;
+    transition: color .15s;
+  }
+  .btn-hero-ghost:hover { color: rgba(255,255,255,.75); }
+
+  /* mini trust badges */
+  .hero-trust {
+    display: flex; align-items: center; gap: 20px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,.07);
+  }
+  .trust-badge {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.75rem; color: rgba(255,255,255,.35); font-weight: 500;
+  }
+  .trust-badge svg { flex-shrink: 0; }
+
+  /* ── Hero Right ── */
+  .hero-right {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 max(40px, calc((100vw - 1200px)/2 + 40px)) 0 48px;
+    position: relative; z-index: 2;
+  }
+
+  /* Preview card */
+  .preview-wrap { position: relative; width: 100%; max-width: 420px; }
+
+  .preview-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: var(--r-lg);
+    padding: 28px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.04),
+      0 24px 60px rgba(0,0,0,.5),
+      0 8px 24px rgba(108,71,255,.15);
+    position: relative; z-index: 2;
+  }
+
+  .pc-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .pc-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--green-lite);
+    color: var(--green);
+    font-size: 0.68rem; font-weight: 700;
+    letter-spacing: .8px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .pc-badge::before {
+    content: ""; width: 5px; height: 5px;
+    background: var(--green); border-radius: 50%;
+  }
+  .pc-sample-tag {
+    font-size: 0.65rem; font-weight: 600;
+    color: #c4b5fd; background: var(--brand-lite);
+    padding: 3px 8px; border-radius: 5px; letter-spacing: .5px;
+  }
+
+  .pc-name {
+    font-size: 1.15rem; font-weight: 800;
+    color: var(--ink); letter-spacing: -0.3px;
+    margin-bottom: 3px;
+  }
+  .pc-sub {
+    font-size: 0.72rem; color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .pc-stats {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 8px; margin-bottom: 16px;
+  }
+  .pcs {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 11px 8px;
+    text-align: center;
+  }
+  .pcs-val {
+    font-size: 1rem; font-weight: 800;
+    color: var(--ink); letter-spacing: -0.3px;
+  }
+  .pcs-val.profit { color: var(--green); }
+  .pcs-lbl { font-size: 0.62rem; color: var(--muted); margin-top: 1px; }
+
+  .pc-target {
+    background: var(--brand);
+    border-radius: 12px; padding: 14px 16px;
+    color: #fff; margin-bottom: 14px;
+  }
+  .pc-target-lbl { font-size: 0.68rem; opacity: .7; margin-bottom: 3px; }
+  .pc-target-val {
+    font-size: 1.5rem; font-weight: 800;
+    letter-spacing: -1px; line-height: 1;
+  }
+  .pc-target-sub { font-size: 0.68rem; opacity: .6; margin-top: 3px; }
+
+  .pc-skeleton { display: flex; flex-direction: column; gap: 6px; }
+  .sk-line {
+    height: 7px; border-radius: 4px;
+    background: var(--border);
+  }
+
+  /* Floating chips */
+  .float-chip {
+    position: absolute;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 12px;
+    padding: 9px 13px;
+    display: flex; align-items: center; gap: 9px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.18);
+    z-index: 3;
+    animation: chipFloat 4s ease-in-out infinite alternate;
+  }
+  .float-chip-1 { top: -18px; right: -18px; animation-delay: 0s; }
+  .float-chip-2 { bottom: -16px; left: -16px; animation-delay: -2s; }
+  @keyframes chipFloat {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-6px); }
+  }
+  .chip-icon { font-size: 1.1rem; }
+  .chip-label { font-size: 0.72rem; font-weight: 700; color: var(--ink); }
+  .chip-sub   { font-size: 0.65rem; color: var(--muted); }
+
+  /* Scroll arrow */
+  .scroll-arrow {
+    position: absolute; bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    color: rgba(255,255,255,.2);
+    font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; border: none; background: none; font-family: inherit;
+    animation: arrowBounce 2.4s ease-in-out infinite;
+    z-index: 2; text-decoration: none;
+  }
+  @keyframes arrowBounce {
+    0%,100% { transform: translateX(-50%) translateY(0); opacity: .4; }
+    50%      { transform: translateX(-50%) translateY(6px); opacity: .8; }
+  }
+
+  /* Hero responsive */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      height: auto; min-height: 100vh;
+      padding: 100px 24px 60px;
+      row-gap: 52px;
+      scroll-snap-align: start;
+    }
+    .hero-left { padding: 0; }
+    .hero-right { padding: 0; justify-content: flex-start; }
+    .preview-wrap { max-width: 100%; }
+    .float-chip-1, .float-chip-2 { display: none; }
+    .scroll-arrow { display: none; }
+  }
+  @media (max-width: 480px) {
+    .hero-h1 { font-size: 2.4rem; letter-spacing: -1.5px; }
+    .hero-trust { flex-wrap: wrap; gap: 12px; }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     SECTION 2 — APP
+  ═══════════════════════════════════════════════════════ */
+  .app-section {
+    height: 100vh;
+    scroll-snap-align: start;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Top bar */
+  .app-topbar {
+    flex-shrink: 0;
+    height: 52px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 28px;
+    gap: 0;
+  }
+  .app-topbar-title {
+    font-size: 0.82rem; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+  .app-topbar-sep {
+    width: 1px; height: 16px;
+    background: var(--border); margin: 0 14px;
+  }
+  .app-topbar-sub {
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .app-topbar-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .topbar-btn {
+    font-family: inherit; font-size: 0.75rem; font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 999px; border: 1.5px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .topbar-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+  /* App body */
+  .app-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    min-height: 0;
+  }
+
+  /* ── LEFT: Form panel ── */
+  .form-panel {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+    padding: 28px;
+  }
+
+  .form-panel-head {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-panel-head h2 {
+    font-size: 1.05rem; font-weight: 800;
+    color: var(--ink); letter-spacing: -0.3px;
+    margin-bottom: 3px;
+  }
+  .form-panel-head p {
+    font-size: 0.78rem; color: var(--muted);
+  }
+
+  .form-group { margin-bottom: 18px; }
+
+  .field-label {
+    display: block; font-size: 0.75rem; font-weight: 600;
+    color: var(--ink-2); margin-bottom: 6px; letter-spacing: 0.1px;
+  }
+  .field-label .opt {
+    font-weight: 400; color: var(--muted); margin-left: 4px;
+  }
+
+  .input-row { position: relative; }
+  .input-prefix {
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.88rem; font-weight: 600;
+    color: var(--muted); pointer-events: none;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    font-family: inherit; font-size: 0.9rem; font-weight: 500;
+    color: var(--ink); background: var(--bg);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    appearance: none;
+  }
+  .has-prefix input { padding-left: 26px; }
+  input:focus, select:focus {
+    outline: none; border-color: var(--brand); background: #fff;
+    box-shadow: 0 0 0 3px rgba(108,71,255,.1);
+  }
+  input::placeholder { color: #a1a1aa; font-weight: 400; }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: "";
+    position: absolute; right: 13px; top: 50%;
+    transform: translateY(-50%);
+    width: 8px; height: 5px;
+    background: var(--muted);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    pointer-events: none;
+  }
+  select { padding-right: 36px; cursor: pointer; }
+
+  .field-error {
+    display: none; font-size: 0.72rem;
+    color: #dc2626; font-weight: 500; margin-top: 4px;
+  }
+
+  .form-divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  .btn-find {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 13px;
+    background: var(--brand); color: #fff;
+    font-family: inherit; font-size: 0.92rem; font-weight: 700;
+    border: none; border-radius: var(--r-sm); cursor: pointer;
+    box-shadow: 0 4px 16px rgba(108,71,255,.3);
+    transition: background .15s, transform .1s, box-shadow .15s;
+    letter-spacing: 0.1px;
+  }
+  .btn-find:hover {
+    background: var(--brand-dark); transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(108,71,255,.4);
+  }
+  .btn-find:active { transform: scale(.98); }
+
+  /* Niche chips (optional quick-select) */
+  .niche-chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 8px;
+  }
+  .niche-chip {
+    font-family: inherit; font-size: 0.72rem; font-weight: 600;
+    padding: 4px 11px; border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer;
+    transition: all .15s;
+  }
+  .niche-chip:hover, .niche-chip.active {
+    border-color: var(--brand); color: var(--brand);
+    background: var(--brand-lite);
+  }
+
+  /* ── RIGHT: Results panel ── */
+  .results-panel {
+    overflow-y: auto;
+    padding: 28px 32px;
+    display: flex; flex-direction: column;
+  }
+
+  /* Waiting state */
+  .waiting-state {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; gap: 0;
+    opacity: 1; transition: opacity .3s;
+  }
+  .waiting-state.hidden { display: none; }
+
+  .waiting-icon {
+    width: 64px; height: 64px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    display: grid; place-items: center;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  }
+  .waiting-state h3 {
+    font-size: 1rem; font-weight: 700;
+    color: var(--ink); margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+  .waiting-state p {
+    font-size: 0.82rem; color: var(--muted);
+    line-height: 1.6; max-width: 280px; margin-bottom: 32px;
+  }
+
+  /* Skeleton preview in waiting */
+  .skeleton-preview {
+    width: 100%; max-width: 400px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    opacity: .5;
+  }
+  .sk { background: var(--border); border-radius: 4px; margin-bottom: 8px; }
+  .sk-h { height: 12px; }
+  .sk-sm { height: 8px; }
+  .sk-lg { height: 20px; margin-bottom: 12px; }
+  .sk-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .sk-cell { height: 52px; background: var(--bg); border-radius: 8px; }
+  .sk-box { height: 64px; background: var(--brand-lite); border-radius: 10px; margin-bottom: 12px; }
+  @keyframes shimmer {
+    0%   { opacity: .4; }
+    50%  { opacity: .8; }
+    100% { opacity: .4; }
+  }
+  .sk, .sk-cell, .sk-box { animation: shimmer 1.8s ease-in-out infinite; }
+
+  /* Results active state */
+  .results-content {
+    display: none; flex-direction: column; gap: 16px;
+  }
+  .results-content.visible {
+    display: flex;
+    animation: fadeUp .45s ease forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Results layout — two columns on wide screens */
+  .results-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .res-product-info { flex: 1; min-width: 0; }
+  .res-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--green-lite);
+    color: var(--green);
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: .8px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .res-badge::before {
+    content: ""; width: 5px; height: 5px;
+    background: var(--green); border-radius: 50%;
+  }
+  .res-product-name {
+    font-size: 1.5rem; font-weight: 800;
+    color: var(--ink); letter-spacing: -0.6px;
+    margin-bottom: 4px; line-height: 1.1;
+  }
+  .res-niche-tag {
+    display: inline-block;
+    font-size: 0.7rem; font-weight: 600;
+    color: var(--brand); background: var(--brand-lite);
+    padding: 3px 10px; border-radius: 999px;
+  }
+
+  .btn-reset {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: inherit; font-size: 0.75rem; font-weight: 600;
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 999px; background: transparent;
+    color: var(--muted); cursor: pointer;
+    transition: all .15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-reset:hover { border-color: var(--brand); color: var(--brand); }
+
+  /* Stats row */
+  .res-stats {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+  }
+  .res-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 14px;
+    text-align: center;
+    transition: transform .15s;
+  }
+  .res-stat:hover { transform: translateY(-2px); }
+  .res-stat-icon { font-size: 1rem; margin-bottom: 6px; }
+  .res-stat-val {
+    font-size: 1.2rem; font-weight: 800;
+    color: var(--ink); letter-spacing: -0.5px;
+  }
+  .res-stat-val.green { color: var(--green); }
+  .res-stat-lbl { font-size: 0.65rem; color: var(--muted); margin-top: 2px; font-weight: 500; }
+
+  /* Target box */
+  .res-target {
+    background: var(--brand);
+    border-radius: var(--r);
+    padding: 20px 22px;
+    color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    position: relative; overflow: hidden;
+  }
+  .res-target::before {
+    content: "";
+    position: absolute; right: -24px; top: -24px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,.06); border-radius: 50%;
+  }
+  .res-target-left { position: relative; z-index: 1; }
+  .res-target-lbl { font-size: 0.72rem; opacity: .7; margin-bottom: 4px; }
+  .res-target-val {
+    font-size: 2rem; font-weight: 800;
+    letter-spacing: -1.5px; line-height: 1;
+  }
+  .res-target-meta {
+    font-size: 0.72rem; opacity: .6; margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .res-target-right {
+    text-align: right; position: relative; z-index: 1;
+  }
+  .res-target-goal-lbl { font-size: 0.65rem; opacity: .6; margin-bottom: 4px; }
+  .res-target-goal-val {
+    font-size: 1.1rem; font-weight: 700;
+  }
+
+  /* Budget warning */
+  .budget-warning {
+    display: none;
+    background: #fef9c3;
+    border: 1px solid #fde047;
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    font-size: 0.8rem; color: #713f12;
+  }
+  .budget-warning strong { display: block; margin-bottom: 2px; font-size: 0.82rem; }
+
+  /* Action plan */
+  .res-plan-header {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .res-section-label {
+    font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+  .plan-list {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 12px;
+  }
+  .plan-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 13px 14px;
+    transition: border-color .15s;
+  }
+  .plan-item:hover { border-color: var(--brand); }
+  .plan-num {
+    flex-shrink: 0; width: 22px; height: 22px;
+    background: var(--brand-lite); color: var(--brand);
+    font-size: 0.68rem; font-weight: 800;
+    border-radius: 6px; display: grid; place-items: center;
+    margin-top: 1px;
+  }
+  .plan-text {
+    font-size: 0.85rem; color: var(--ink-2); line-height: 1.55;
+  }
+  .plan-text strong { color: var(--brand); font-weight: 700; }
+
+  /* ═══════════════════════════════════════════════════════
+     SIGN-UP BAR — slides up from bottom after results
+  ═══════════════════════════════════════════════════════ */
+  .signup-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 300;
+    background: var(--ink);
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding: 14px 28px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.16,1,.3,1);
+    box-shadow: 0 -8px 32px rgba(0,0,0,.3);
+  }
+  .signup-bar.visible { transform: translateY(0); }
+
+  .signup-bar-text { flex: 1; min-width: 180px; }
+  .signup-bar-text strong {
+    display: block; font-size: 0.88rem; font-weight: 700;
+    color: #fff; margin-bottom: 1px; letter-spacing: -0.2px;
+  }
+  .signup-bar-text span {
+    font-size: 0.75rem; color: rgba(255,255,255,.4);
+  }
+
+  .signup-form {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .signup-input {
+    padding: 9px 14px; width: 230px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: var(--r-sm);
+    color: #fff; font-family: inherit; font-size: 0.85rem;
+  }
+  .signup-input::placeholder { color: rgba(255,255,255,.3); }
+  .signup-input:focus {
+    outline: none; border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(108,71,255,.25);
+    background: rgba(255,255,255,.1);
+  }
+  .signup-submit {
+    padding: 9px 18px;
+    background: var(--brand); color: #fff;
+    font-family: inherit; font-size: 0.82rem; font-weight: 700;
+    border: none; border-radius: var(--r-sm); cursor: pointer;
+    transition: background .15s;
+  }
+  .signup-submit:hover { background: var(--brand-dark); }
+  .signup-success {
+    display: none; font-size: 0.82rem; font-weight: 600;
+    color: var(--green);
+  }
+
+  .signup-dismiss {
+    background: none; border: none; cursor: pointer;
+    color: rgba(255,255,255,.3); font-size: 1.2rem; line-height: 1;
+    padding: 4px; transition: color .15s; font-family: inherit;
+    margin-left: auto;
+  }
+  .signup-dismiss:hover { color: rgba(255,255,255,.7); }
+
+  @media (max-width: 600px) {
+    .signup-bar { padding: 14px 20px; }
+    .signup-input { width: 100%; }
+    .signup-form { width: 100%; }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     APP RESPONSIVE
+  ═══════════════════════════════════════════════════════ */
+  @media (max-width: 860px) {
+    html { scroll-snap-type: none; }
+    .app-section { height: auto; min-height: 100vh; overflow: visible; }
+    .app-body { grid-template-columns: 1fr; }
+    .form-panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .results-panel { padding: 24px 20px; }
+    .res-target { flex-direction: column; gap: 8px; }
+    .res-target-right { text-align: left; }
+  }
+  @media (max-width: 480px) {
+    .app-topbar { padding: 0 16px; }
+    .app-topbar-sub { display: none; }
+    .form-panel { padding: 20px 16px; }
+    .res-stats { grid-template-columns: 1fr 1fr; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAV
+══════════════════════════════════════════════ -->
+<nav class="nav dark" id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-mark">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path d="M2.5 12L7.5 2.5L12.5 12" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4.5 9H10.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="nav-name">ProfitLab</span>
+  </a>
+  <div class="nav-right">
+    <a href="#app" class="nav-link">Calculator</a>
+    <a href="#app" class="nav-btn" id="nav-cta">
+      Try it free
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 1 — HERO
+══════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+
+  <!-- Left: copy -->
+  <div class="hero-left">
+    <div class="hero-tag">
+      <span class="hero-tag-dot"></span>
+      Product Research Tool
+    </div>
+
+    <h1 class="hero-h1">
+      Stop guessing.<br/>
+      Start selling<br/>
+      <span class="accent">what works.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Tell us your profit goal, pick a niche — we match you to a winning product,
+      break down every number, and hand you an action plan. Done in 30 seconds.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#app" class="btn-hero">
+        Find my product
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <button class="btn-hero-ghost" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">
+        See how it works
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9l-7 7-7-7"/></svg>
+      </button>
+    </div>
+
+    <div class="hero-trust">
+      <div class="trust-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        No login needed
+      </div>
+      <div class="trust-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        100% free
+      </div>
+      <div class="trust-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        8+ niches
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: preview card -->
+  <div class="hero-right">
+    <div class="preview-wrap">
+
+      <div class="float-chip float-chip-1">
+        <span class="chip-icon">🎯</span>
+        <div>
+          <div class="chip-label">Profit Match</div>
+          <div class="chip-sub">Fitness niche</div>
+        </div>
+      </div>
+
+      <div class="float-chip float-chip-2">
+        <span class="chip-icon">📈</span>
+        <div>
+          <div class="chip-label">+$17.19 / unit</div>
+          <div class="chip-sub">Profit margin</div>
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <div class="pc-header">
+          <span class="pc-badge">Recommended</span>
+          <span class="pc-sample-tag">SAMPLE</span>
+        </div>
+        <div class="pc-name">Resistance Band Set</div>
+        <div class="pc-sub">Fitness &amp; Sports · High demand · Low competition</div>
+        <div class="pc-stats">
+          <div class="pcs">
+            <div class="pcs-val">$4.80</div>
+            <div class="pcs-lbl">Cost / unit</div>
+          </div>
+          <div class="pcs">
+            <div class="pcs-val">$21.99</div>
+            <div class="pcs-lbl">Sell price</div>
+          </div>
+          <div class="pcs">
+            <div class="pcs-val profit">+$17.19</div>
+            <div class="pcs-lbl">Profit / unit</div>
+          </div>
+        </div>
+        <div class="pc-target">
+          <div class="pc-target-lbl">Units to hit $2,000 / month</div>
+          <div class="pc-target-val">117 units</div>
+          <div class="pc-target-sub">≈ 4 per day · $2,001 projected</div>
+        </div>
+        <div class="pc-skeleton">
+          <div class="sk sk-sm" style="width:80%"></div>
+          <div class="sk sk-sm" style="width:65%"></div>
+          <div class="sk sk-sm" style="width:73%"></div>
+          <div class="sk sk-sm" style="width:55%"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scroll arrow -->
+  <a href="#app" class="scroll-arrow">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9l-7 7-7-7"/></svg>
+    Scroll
+  </a>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 2 — APP
+══════════════════════════════════════════════ -->
+<section class="app-section" id="app">
+
+  <!-- Top bar -->
+  <div class="app-topbar">
+    <span class="app-topbar-title">Product Calculator</span>
+    <span class="app-topbar-sep"></span>
+    <span class="app-topbar-sub">Fill in your goal → get a winning product + plan</span>
+    <div class="app-topbar-right">
+      <button class="topbar-btn" onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'})">← Back to home</button>
+    </div>
+  </div>
+
+  <!-- Split body -->
+  <div class="app-body">
+
+    <!-- LEFT: Form -->
+    <div class="form-panel">
+      <div class="form-panel-head">
+        <h2>Your Goal</h2>
+        <p>3 inputs is all it takes</p>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="target-profit">Target Monthly Profit</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="target-profit" placeholder="e.g. 2,000" min="1" />
+        </div>
+        <div class="field-error" id="err-profit">Please enter a profit target.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="budget">Starting Budget <span class="opt">(optional)</span></label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="budget" placeholder="e.g. 500" min="0" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="niche">Niche</label>
+        <div class="select-wrap">
+          <select id="niche">
+            <option value="" disabled selected>Choose a niche…</option>
+            <option value="health">Health &amp; Wellness</option>
+            <option value="beauty">Beauty &amp; Skincare</option>
+            <option value="fitness">Fitness &amp; Sports</option>
+            <option value="home">Home &amp; Kitchen</option>
+            <option value="pets">Pets</option>
+            <option value="tech">Tech Accessories</option>
+            <option value="kids">Kids &amp; Babies</option>
+            <option value="outdoors">Outdoors &amp; Travel</option>
+          </select>
+        </div>
+        <div class="field-error" id="err-niche">Please select a niche.</div>
+        <!-- Quick-pick chips -->
+        <div class="niche-chips" id="niche-chips">
+          <button class="niche-chip" data-val="fitness">Fitness</button>
+          <button class="niche-chip" data-val="beauty">Beauty</button>
+          <button class="niche-chip" data-val="tech">Tech</button>
+          <button class="niche-chip" data-val="pets">Pets</button>
+          <button class="niche-chip" data-val="home">Home</button>
+        </div>
+      </div>
+
+      <hr class="form-divider" />
+
+      <button class="btn-find" onclick="findProduct()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Find Winning Product
+      </button>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="results-panel" id="results-panel">
+
+      <!-- Waiting state -->
+      <div class="waiting-state" id="waiting-state">
+        <div class="waiting-icon">📦</div>
+        <h3>Your results will appear here</h3>
+        <p>Enter your profit goal and niche on the left, then hit the button.</p>
+        <div class="skeleton-preview">
+          <div class="sk sk-lg" style="width:55%"></div>
+          <div class="sk sk-h" style="width:40%"></div>
+          <div style="height:12px"></div>
+          <div class="sk-row">
+            <div class="sk-cell"></div>
+            <div class="sk-cell"></div>
+            <div class="sk-cell"></div>
+          </div>
+          <div class="sk-box"></div>
+          <div class="sk sk-sm" style="width:80%"></div>
+          <div class="sk sk-sm" style="width:65%"></div>
+          <div class="sk sk-sm" style="width:72%"></div>
+        </div>
+      </div>
+
+      <!-- Active results -->
+      <div class="results-content" id="results-content">
+
+        <div class="results-top">
+          <div class="res-product-info">
+            <div class="res-badge">Recommended</div>
+            <div class="res-product-name" id="res-name">–</div>
+            <div class="res-niche-tag" id="res-niche-tag">–</div>
+          </div>
+          <button class="btn-reset" onclick="resetForm()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19l-7-7 7-7"/></svg>
+            New search
+          </button>
+        </div>
+
+        <div class="res-stats">
+          <div class="res-stat">
+            <div class="res-stat-icon">🏷️</div>
+            <div class="res-stat-val" id="res-cost">–</div>
+            <div class="res-stat-lbl">Cost per unit</div>
+          </div>
+          <div class="res-stat">
+            <div class="res-stat-icon">💳</div>
+            <div class="res-stat-val" id="res-price">–</div>
+            <div class="res-stat-lbl">Selling price</div>
+          </div>
+          <div class="res-stat">
+            <div class="res-stat-icon">📈</div>
+            <div class="res-stat-val green" id="res-profit-unit">–</div>
+            <div class="res-stat-lbl">Profit / unit</div>
+          </div>
+        </div>
+
+        <div class="res-target">
+          <div class="res-target-left">
+            <div class="res-target-lbl">Units needed to hit your monthly target</div>
+            <div class="res-target-val" id="res-units">–</div>
+            <div class="res-target-meta">
+              <span id="res-per-day">–</span>
+              <span style="opacity:.3">·</span>
+              <span id="res-projected">–</span>
+            </div>
+          </div>
+          <div class="res-target-right">
+            <div class="res-target-goal-lbl">Your goal</div>
+            <div class="res-target-goal-val" id="res-goal">–</div>
+          </div>
+        </div>
+
+        <div class="budget-warning" id="budget-warning">
+          <strong>⚠️ Budget note</strong>
+          <span id="budget-warning-text"></span>
+        </div>
+
+        <div>
+          <div class="res-plan-header">
+            <div class="res-section-label">5-Step Action Plan</div>
+          </div>
+          <ol class="plan-list" id="plan-list"></ol>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SIGN-UP BAR
+══════════════════════════════════════════════ -->
+<div class="signup-bar" id="signup-bar">
+  <div class="signup-bar-text">
+    <strong>Save your plan — it's free</strong>
+    <span>Get your full report + updates when new products drop</span>
+  </div>
+  <div class="signup-form" id="signup-form">
+    <input class="signup-input" type="email" id="signup-email" placeholder="your@email.com" />
+    <button class="signup-submit" onclick="submitSignup()">Save my plan →</button>
+  </div>
+  <div class="signup-success" id="signup-success">
+    ✓ You're in! Check your inbox.
+  </div>
+  <button class="signup-dismiss" onclick="dismissSignup()" title="Dismiss">×</button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     DATA + LOGIC
+══════════════════════════════════════════════ -->
+<script>
+/* ── Product data ─────────────────────────────────── */
+const PRODUCTS = {
+  health: [{
+    name: "Immune Support Gummies",
+    cost: 6.50, price: 29.99,
+    plan: [
+      "Source from a <strong>certified supplement supplier</strong> with lab-tested ingredients.",
+      "List on <strong>Amazon FBA</strong> and your own Shopify store.",
+      "Run a <strong>5-day launch promotion</strong> at 20% off to collect initial reviews.",
+      "Target keywords: <em>'immune gummies', 'daily vitamins'</em> via PPC ads.",
+      "Scale to <strong>50+ units/week</strong> once you hit a 4-star average.",
+    ]
+  }],
+  beauty: [{
+    name: "Vitamin C Brightening Serum",
+    cost: 5.00, price: 24.99,
+    plan: [
+      "Order a <strong>small MOQ sample run</strong> (50 units) to validate quality.",
+      "Create a clean brand label and list on <strong>Etsy + Amazon</strong>.",
+      "Send samples to <strong>micro-influencers</strong> (10k–50k followers) in the skincare space.",
+      "Post before/after content on <strong>TikTok and Instagram Reels</strong>.",
+      "Re-invest first month's profit into a <strong>larger batch</strong> for better unit economics.",
+    ]
+  }],
+  fitness: [{
+    name: "Resistance Band Set (5-piece)",
+    cost: 4.80, price: 21.99,
+    plan: [
+      "Source from an <strong>established gym-equipment supplier</strong> with quality certifications.",
+      "Bundle with a <strong>free PDF workout guide</strong> to increase perceived value.",
+      "List on <strong>Amazon FBA</strong> — fitness gear sells well year-round.",
+      "Run ads targeting <strong>home workout</strong> and <strong>beginner fitness</strong> audiences.",
+      "Upsell buyers with a <strong>yoga mat or foam roller</strong> in a follow-up email.",
+    ]
+  }],
+  home: [{
+    name: "Bamboo Cutting Board Set",
+    cost: 7.00, price: 32.99,
+    plan: [
+      "Find a supplier on <strong>Alibaba</strong> offering FSC-certified bamboo.",
+      "Add custom <strong>laser-engraving</strong> (name/logo) to differentiate from competition.",
+      "List on <strong>Amazon, Etsy, and Pinterest Shopping</strong>.",
+      "Target gift-buying seasons: <strong>Mother's Day, Christmas, weddings</strong>.",
+      "Offer a <strong>3-piece bundle</strong> (S/M/L) to increase average order value.",
+    ]
+  }],
+  pets: [{
+    name: "Adjustable Dog Harness",
+    cost: 5.50, price: 26.99,
+    plan: [
+      "Order samples in <strong>3 sizes (S/M/L)</strong> to cover most dog breeds.",
+      "Photograph on <strong>real dogs</strong> — lifestyle photos outperform product-only shots.",
+      "List on <strong>Amazon, Chewy, and your own Shopify store</strong>.",
+      "Partner with <strong>dog trainers or pet influencers</strong> for authentic reviews.",
+      "Introduce seasonal <strong>color variants</strong> to keep the listing fresh.",
+    ]
+  }],
+  tech: [{
+    name: "MagSafe-Compatible Phone Wallet",
+    cost: 3.20, price: 17.99,
+    plan: [
+      "Source slim wallets with <strong>RFID blocking</strong> built in for extra value.",
+      "Focus on <strong>iPhone 14/15 Pro buyers</strong> — large, active audience.",
+      "List on <strong>Amazon</strong> and run TikTok Shop for viral potential.",
+      "Create a <strong>30-second demo video</strong> showing the snap-on convenience.",
+      "Bundle 2-pack at a small discount to <strong>double units per order</strong>.",
+    ]
+  }],
+  kids: [{
+    name: "Montessori Stacking Toy Set",
+    cost: 6.00, price: 27.99,
+    plan: [
+      "Ensure the product meets <strong>ASTM F963 and CE safety standards</strong>.",
+      "Write listings that speak to <strong>parents and gift-buyers</strong>, not just kids.",
+      "List on <strong>Amazon Baby, Etsy, and Facebook Marketplace</strong>.",
+      "Target ads to parents of <strong>6–24 month</strong> age groups.",
+      "Offer a <strong>gift-wrapping option</strong> at checkout to boost conversions.",
+    ]
+  }],
+  outdoors: [{
+    name: "Lightweight Packable Daypack",
+    cost: 8.50, price: 39.99,
+    plan: [
+      "Source a pack that folds into its <strong>own pocket</strong> — big differentiator.",
+      "Target <strong>hikers, travelers, and gym-goers</strong> — wide addressable market.",
+      "List on <strong>Amazon, REI Co-op marketplace, and your own store</strong>.",
+      "Run ads before <strong>summer and holiday travel seasons</strong>.",
+      "Add a <strong>lifetime warranty card</strong> inside every package to reduce returns.",
+    ]
+  }],
+};
+
+/* ── Nav morphs on scroll ─────────────────────── */
+const nav  = document.getElementById('nav');
+const hero = document.getElementById('hero');
+const obs  = new IntersectionObserver(
+  ([e]) => {
+    nav.className = 'nav ' + (e.isIntersecting ? 'dark' : 'light');
+  },
+  { threshold: 0.1 }
+);
+obs.observe(hero);
+
+/* ── Niche chips ──────────────────────────────── */
+document.querySelectorAll('.niche-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const val = chip.dataset.val;
+    const sel = document.getElementById('niche');
+    sel.value = val;
+    document.querySelectorAll('.niche-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+document.getElementById('niche').addEventListener('change', function() {
+  document.querySelectorAll('.niche-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.val === this.value);
+  });
+});
+
+/* ── Main logic ───────────────────────────────── */
+function findProduct() {
+  const profitEl = document.getElementById('target-profit');
+  const budgetEl = document.getElementById('budget');
+  const nicheEl  = document.getElementById('niche');
+  const errP = document.getElementById('err-profit');
+  const errN = document.getElementById('err-niche');
+
+  errP.style.display = 'none';
+  errN.style.display = 'none';
+
+  let ok = true;
+  const target = parseFloat(profitEl.value);
+  if (!profitEl.value || isNaN(target) || target <= 0) { errP.style.display = 'block'; ok = false; }
+  const nicheKey = nicheEl.value;
+  if (!nicheKey) { errN.style.display = 'block'; ok = false; }
+  if (!ok) return;
+
+  const budget  = parseFloat(budgetEl.value) || null;
+  const product = PRODUCTS[nicheKey][0];
+  const profit  = product.price - product.cost;
+  const units   = Math.ceil(target / profit);
+  const perDay  = Math.ceil(units / 30);
+  const totalCost = units * product.cost;
+  const projected = units * profit;
+
+  // Populate
+  document.getElementById('res-name').textContent       = product.name;
+  document.getElementById('res-niche-tag').textContent  = nicheEl.options[nicheEl.selectedIndex].text;
+  document.getElementById('res-cost').textContent       = fmt(product.cost);
+  document.getElementById('res-price').textContent      = fmt(product.price);
+  document.getElementById('res-profit-unit').textContent = fmt(profit);
+  document.getElementById('res-units').textContent      = units.toLocaleString() + ' units';
+  document.getElementById('res-per-day').textContent    = `≈ ${perDay}/day`;
+  document.getElementById('res-projected').textContent  = `${fmt(projected)} projected`;
+  document.getElementById('res-goal').textContent       = fmt(target) + '/mo';
+
+  // Budget warning
+  const bw = document.getElementById('budget-warning');
+  if (budget !== null && budget < totalCost) {
+    const canBuy = Math.floor(budget / product.cost);
+    bw.style.display = 'block';
+    document.getElementById('budget-warning-text').innerHTML =
+      `Your budget (${fmt(budget)}) covers <strong>${canBuy} units</strong>. ` +
+      `You need ${units} units (${fmt(totalCost)} cost) to hit your goal. ` +
+      `Start small and reinvest monthly.`;
+  } else {
+    bw.style.display = 'none';
+  }
+
+  // Action plan
+  const list = document.getElementById('plan-list');
+  list.innerHTML = '';
+  product.plan.forEach((step, i) => {
+    const li = document.createElement('li');
+    li.className = 'plan-item';
+    li.innerHTML = `<div class="plan-num">${i + 1}</div><div class="plan-text">${step}</div>`;
+    list.appendChild(li);
+  });
+
+  // Show results
+  document.getElementById('waiting-state').classList.add('hidden');
+  const rc = document.getElementById('results-content');
+  rc.classList.remove('visible');
+  void rc.offsetWidth;
+  rc.classList.add('visible');
+
+  // Sign-up bar after short delay
+  setTimeout(() => document.getElementById('signup-bar').classList.add('visible'), 1200);
+}
+
+function resetForm() {
+  document.getElementById('results-content').classList.remove('visible');
+  document.getElementById('waiting-state').classList.remove('hidden');
+  document.getElementById('signup-bar').classList.remove('visible');
+}
+
+function submitSignup() {
+  const email = document.getElementById('signup-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('signup-email').focus();
+    return;
+  }
+  // Placeholder — wire to your email service here
+  document.getElementById('signup-form').style.display    = 'none';
+  document.getElementById('signup-success').style.display = 'block';
+}
+
+function dismissSignup() {
+  document.getElementById('signup-bar').classList.remove('visible');
+}
+
+function fmt(n) {
+  return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+</script>
+
+</body>
+</html>
