@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0c10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>ProfitLab — Find Your Winning Product</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -125,6 +128,7 @@
   ═══════════════════════════════════════════════════════ */
   .hero {
     height: 100vh;
+    height: 100svh; /* fix iOS safari address-bar bug */
     scroll-snap-align: start;
     background: var(--base);
     display: grid;
@@ -364,23 +368,44 @@
   }
 
   /* Hero responsive */
+  /* ── Tablet: stack hero ── */
   @media (max-width: 900px) {
     .hero {
       grid-template-columns: 1fr;
-      height: auto; min-height: 100vh;
-      padding: 100px 24px 60px;
-      row-gap: 52px;
+      height: auto; min-height: 100svh;
+      padding: 96px 28px 56px;
+      row-gap: 40px;
       scroll-snap-align: start;
     }
     .hero-left { padding: 0; }
     .hero-right { padding: 0; justify-content: flex-start; }
-    .preview-wrap { max-width: 100%; }
+    .preview-wrap { max-width: 480px; }
     .float-chip-1, .float-chip-2 { display: none; }
     .scroll-arrow { display: none; }
   }
-  @media (max-width: 480px) {
-    .hero-h1 { font-size: 2.4rem; letter-spacing: -1.5px; }
-    .hero-trust { flex-wrap: wrap; gap: 12px; }
+
+  /* ── Mobile: full overhaul ── */
+  @media (max-width: 540px) {
+    /* Hero */
+    .hero { padding: 84px 20px 44px; row-gap: 32px; }
+    .hero-h1 { font-size: 2.2rem; letter-spacing: -1.2px; }
+    .hero-sub { font-size: 0.95rem; }
+    .hero-tag { font-size: 0.68rem; margin-bottom: 18px; }
+    .hero-trust { flex-wrap: wrap; gap: 10px; }
+    .trust-badge { font-size: 0.78rem; }
+
+    /* Hide preview card on small phones — too much vertical space */
+    .hero-right { display: none; }
+
+    /* Larger touch targets for CTA */
+    .btn-hero { padding: 15px 28px; font-size: 1rem; }
+    .hero-actions { margin-bottom: 36px; }
+
+    /* Preview card when visible (tablet) */
+    .pc-stats { grid-template-columns: 1fr 1fr 1fr; }
+    .pcs { padding: 10px 6px; }
+    .pcs-val { font-size: 0.9rem; }
+    .pcs-lbl { font-size: 0.6rem; }
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -388,6 +413,7 @@
   ═══════════════════════════════════════════════════════ */
   .app-section {
     height: 100vh;
+    height: 100svh; /* fix iOS safari address-bar bug */
     scroll-snap-align: start;
     background: var(--app-bg);
     display: flex;
@@ -788,23 +814,69 @@
   /* ═══════════════════════════════════════════════════════
      APP RESPONSIVE
   ═══════════════════════════════════════════════════════ */
+
+  /* ── Tablet: stack panels ── */
   @media (max-width: 860px) {
     html { scroll-snap-type: none; }
-    .app-section { height: auto; min-height: 100vh; overflow: visible; }
+    .app-section { height: auto; min-height: 100svh; overflow: visible; }
     .app-body { grid-template-columns: 1fr; }
     .form-panel { border-right: none; border-bottom: 1px solid var(--border); }
     .results-panel { padding: 24px 20px; }
     .res-target { flex-direction: column; gap: 8px; }
     .res-target-right { text-align: left; }
   }
-  @media (max-width: 480px) {
-    .app-topbar { padding: 0 16px; }
-    .app-topbar-sub { display: none; }
+
+  /* ── Mobile: tighten app UI ── */
+  @media (max-width: 540px) {
+    /* Top bar */
+    .app-topbar { padding: 0 16px; height: 48px; }
+    .app-topbar-sep, .app-topbar-sub { display: none; }
+    .topbar-btn { padding: 6px 12px; font-size: 0.72rem; min-height: 36px; }
+
+    /* Form panel */
     .form-panel { padding: 20px 16px; }
+    .form-panel-head { margin-bottom: 18px; padding-bottom: 16px; }
+    .form-panel-head h2 { font-size: 1rem; }
+
+    /* Bigger touch targets on inputs */
+    input, select { padding: 12px 13px; font-size: 0.95rem; }
+    .has-prefix input { padding-left: 26px; }
+
+    /* Niche chips — bigger tap area */
+    .niche-chip { padding: 7px 13px; font-size: 0.75rem; }
+
+    /* Find button */
+    .btn-find { padding: 15px; font-size: 0.95rem; }
+
+    /* Results panel */
+    .results-panel { padding: 20px 16px; }
+
+    /* Stats — 2 col on mobile, profit gets full row */
     .res-stats { grid-template-columns: 1fr 1fr; }
+    .res-stat:last-child { grid-column: 1 / -1; }
+
+    /* Scale down big numbers slightly */
+    .res-target-val { font-size: 1.7rem; }
+    .res-product-name { font-size: 1.25rem; }
+
+    /* Labels readable on small screens */
+    .res-section-label { font-size: 0.72rem; }
+    .plan-text { font-size: 0.88rem; }
+
+    /* Waiting state */
+    .skeleton-preview { display: none; }
+    .waiting-state p { margin-bottom: 0; }
   }
 
-  /* Signup bar on dark — already consistent */
+  /* ── Signup bar ── */
+  @media (max-width: 600px) {
+    .signup-bar { padding: 14px 20px; flex-wrap: wrap; }
+    .signup-input { width: 100%; }
+    .signup-form { width: 100%; }
+    .signup-submit { width: 100%; text-align: center; padding: 11px; }
+  }
+
+  /* Signup bar on dark — always consistent */
   .signup-bar { background: var(--surface-1); border-top: 1px solid var(--border-med); }
   .signup-success { color: var(--green); }
   </style>
