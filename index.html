@@ -204,20 +204,28 @@
     margin-bottom: 52px;
   }
   .btn-hero {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--brand);
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, #7c5cff 0%, #9d6fff 50%, #7c5cff 100%);
+    background-size: 200% auto;
     color: #fff;
-    font-family: inherit; font-size: 0.92rem; font-weight: 700;
-    padding: 13px 26px;
+    font-family: inherit; font-size: 0.97rem; font-weight: 700;
+    padding: 14px 30px;
     border-radius: 999px; border: none; cursor: pointer; text-decoration: none;
-    box-shadow: 0 0 28px rgba(124,92,255,.35);
-    transition: background .15s, transform .15s, box-shadow .15s;
+    box-shadow: 0 0 0 1px rgba(124,92,255,.4), 0 0 32px rgba(124,92,255,.4), 0 4px 16px rgba(0,0,0,.3);
+    animation: btnShimmer 3s linear infinite;
+    transition: transform .15s, box-shadow .15s;
     white-space: nowrap;
+    letter-spacing: 0.1px;
+  }
+  @keyframes btnShimmer {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
   }
   .btn-hero:hover {
-    background: var(--brand-dark); transform: translateY(-1px);
-    box-shadow: 0 0 40px rgba(124,92,255,.5);
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(124,92,255,.6), 0 0 48px rgba(124,92,255,.6), 0 8px 24px rgba(0,0,0,.35);
   }
+  .btn-hero:active { transform: scale(.97); }
   .btn-hero-ghost {
     display: inline-flex; align-items: center; gap: 6px;
     color: var(--text-muted);
@@ -266,31 +274,31 @@
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 16px;
   }
+  /* Preview card — always white, so use hardcoded dark values */
   .pc-badge {
     display: inline-flex; align-items: center; gap: 5px;
-    background: var(--green-lite);
-    color: var(--green);
+    background: #dcfce7; color: #15803d;
     font-size: 0.68rem; font-weight: 700;
     letter-spacing: .8px; text-transform: uppercase;
     padding: 4px 10px; border-radius: 999px;
   }
   .pc-badge::before {
     content: ""; width: 5px; height: 5px;
-    background: var(--green); border-radius: 50%;
+    background: #16a34a; border-radius: 50%;
   }
   .pc-sample-tag {
     font-size: 0.65rem; font-weight: 600;
-    color: #c4b5fd; background: var(--brand-lite);
+    color: #7c5cff; background: #ede9ff;
     padding: 3px 8px; border-radius: 5px; letter-spacing: .5px;
   }
 
   .pc-name {
     font-size: 1.15rem; font-weight: 800;
-    color: var(--ink); letter-spacing: -0.3px;
+    color: #09090b; letter-spacing: -0.3px;
     margin-bottom: 3px;
   }
   .pc-sub {
-    font-size: 0.72rem; color: var(--muted);
+    font-size: 0.72rem; color: #71717a;
     margin-bottom: 18px;
   }
 
@@ -299,17 +307,15 @@
     gap: 8px; margin-bottom: 16px;
   }
   .pcs {
-    background: var(--bg);
-    border-radius: 10px;
-    padding: 11px 8px;
-    text-align: center;
+    background: #f4f4f6;
+    border-radius: 10px; padding: 11px 8px; text-align: center;
   }
   .pcs-val {
     font-size: 1rem; font-weight: 800;
-    color: var(--ink); letter-spacing: -0.3px;
+    color: #09090b; letter-spacing: -0.3px;
   }
-  .pcs-val.profit { color: var(--green); }
-  .pcs-lbl { font-size: 0.62rem; color: var(--muted); margin-top: 1px; }
+  .pcs-val.profit { color: #16a34a; }
+  .pcs-lbl { font-size: 0.62rem; color: #71717a; margin-top: 1px; }
 
   .pc-target {
     background: var(--brand);
@@ -324,20 +330,16 @@
   .pc-target-sub { font-size: 0.68rem; opacity: .6; margin-top: 3px; }
 
   .pc-skeleton { display: flex; flex-direction: column; gap: 6px; }
-  .sk-line {
-    height: 7px; border-radius: 4px;
-    background: var(--border);
-  }
+  .sk-line { height: 7px; border-radius: 4px; background: #e4e4e7; }
 
-  /* Floating chips */
+  /* Floating chips — also always white */
   .float-chip {
     position: absolute;
     background: #fff;
     border: 1px solid rgba(0,0,0,.08);
-    border-radius: 12px;
-    padding: 9px 13px;
+    border-radius: 12px; padding: 9px 13px;
     display: flex; align-items: center; gap: 9px;
-    box-shadow: 0 8px 28px rgba(0,0,0,.18);
+    box-shadow: 0 8px 28px rgba(0,0,0,.22);
     z-index: 3;
     animation: chipFloat 4s ease-in-out infinite alternate;
   }
@@ -348,8 +350,8 @@
     to   { transform: translateY(-6px); }
   }
   .chip-icon { font-size: 1.1rem; }
-  .chip-label { font-size: 0.72rem; font-weight: 700; color: var(--ink); }
-  .chip-sub   { font-size: 0.65rem; color: var(--muted); }
+  .chip-label { font-size: 0.72rem; font-weight: 700; color: #09090b; }
+  .chip-sub   { font-size: 0.65rem; color: #71717a; }
 
   /* Scroll arrow */
   .scroll-arrow {
@@ -749,8 +751,8 @@
     position: fixed;
     bottom: 0; left: 0; right: 0;
     z-index: 300;
-    background: var(--ink);
-    border-top: 1px solid rgba(255,255,255,.08);
+    background: var(--surface-1);
+    border-top: 1px solid var(--border-med);
     padding: 14px 28px;
     display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
     transform: translateY(100%);
@@ -930,8 +932,7 @@
 
     <div class="hero-actions">
       <a href="#app" class="btn-hero">
-        Find my product
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        ⚡ Find Winning Product
       </a>
       <button class="btn-hero-ghost" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">
         See how it works
